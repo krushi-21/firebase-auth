@@ -1,0 +1,9 @@
+<% if (user) { %>
+<h2>name:<%= user.name %></h2>
+<img src="<%=user.picture %>" alt="Italian Trulli" />
+
+<h2>email:<%= user.email %></h2>
+<% } %>
+<a href="http://localhost:3000/logout">
+  <button>Logout</button>
+</a>

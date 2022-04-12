@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Firebase Package-->
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+
+    <!-- Loads the login UI elements-->
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"
+    />
+
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Welcome</h1>
+    <h1 style="text-align: center">Sign in with Google Example</h1>
+    <div id="firebaseui-auth-container"></div>
+    <script>
+      //firebase keys
+      var config = {
+        apiKey: 'AIzaSyD0Kl19GJAK5D9M5mrr5Z-IomnaHHeOThc',
+
+        authDomain: 'nodeauth-2f958.firebaseapp.com',
+
+        projectId: 'nodeauth-2f958',
+
+        storageBucket: 'nodeauth-2f958.appspot.com',
+
+        messagingSenderId: '912068529981',
+
+        appId: '1:912068529981:web:be8dd8dc9d69edd3cf7f54',
+      };
+      //initialize firebase app with all firebase config
+      firebase.initializeApp(config);
+      //set firebase auth
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+      // FirebaseUI config.
+      var uiConfig = {
+        signInOptions: [
+          // Google sign in option
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          //twitter sign in option
+          firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+          //facebook sign in option
+          firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        ],
+
+        //callbacks
+        callbacks: {
+          signInSuccess: function (user, credential, redirectUrl) {
+            //get user token if user is available
+            firebase.auth().onAuthStateChanged(function (user) {
+              if (user) {
+                user.getIdToken(true).then(function (data) {
+                  document.cookie = 'session=data';
+                  window.location.href = '/savecookie?id=' + data;
+                });
+              }
+            });
+          },
+        },
+      };
+      //setting up firebase auth ui
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      ui.start('#firebaseui-auth-container', uiConfig);
+    </script>
+  </body>
+</html>
