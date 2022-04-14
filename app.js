@@ -1,15 +1,27 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const admin = require('firebase-admin');
-
-const key = require('./nodeauth-2f958-firebase-adminsdk-gb1ji-5fe04be0a6.json');
+require('dotenv').config();
+const key = require('./firebase.json');
 const checkUserAuth = require('./middlewares/checkAuth');
-const savecookie = require('./middlewares/saveCookies');
+const { createToken } = require('./utils/token');
 
 const app = express();
 
-const port = process.env.PORT || 3000;
+const port = process.argv[2] || 3000;
+var config = {
+  apiKey: process.env.APIKEY,
 
+  authDomain: process.env.AUTHDOMAIN,
+
+  projectId: process.env.PROJECTID,
+
+  storageBucket: process.env.STORAGEBUCKET,
+
+  messagingSenderId: process.env.MESSAGINGSENDERID,
+
+  appId: process.env.APPID,
+};
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,7 +37,7 @@ admin.initializeApp({
 
 //app routes
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', config);
 });
 
 app.get('/success', checkUserAuth, (req, res) => {
@@ -41,7 +53,9 @@ app.get('/logout', (req, res) => {
 //saving firebase token in cookies
 app.get('/savecookie', (req, res) => {
   const Idtoken = req.query.id;
-  savecookie(Idtoken, res);
+  const token = createToken(Idtoken);
+  res.cookie('session', token);
+  res.redirect('/success');
 });
 
 //create server

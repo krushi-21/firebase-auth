@@ -23,18 +23,13 @@
     <div id="firebaseui-auth-container"></div>
     <script>
       //firebase keys
-      var config = {
-        apiKey: 'AIzaSyD0Kl19GJAK5D9M5mrr5Z-IomnaHHeOThc',
-
-        authDomain: 'nodeauth-2f958.firebaseapp.com',
-
-        projectId: 'nodeauth-2f958',
-
-        storageBucket: 'nodeauth-2f958.appspot.com',
-
-        messagingSenderId: '912068529981',
-
-        appId: '1:912068529981:web:be8dd8dc9d69edd3cf7f54',
+      const config = {
+        apiKey: '<%- apiKey %>',
+        authDomain: '<%- authDomain %>',
+        projectId: '<%- projectId %>',
+        storageBucket: '<%- storageBucket %>',
+        messagingSenderId: '<%- messagingSenderId %>',
+        appId: '<%- appId %>',
       };
       //initialize firebase app with all firebase config
       firebase.initializeApp(config);
@@ -58,7 +53,6 @@
             firebase.auth().onAuthStateChanged(function (user) {
               if (user) {
                 user.getIdToken(true).then(function (data) {
-                  document.cookie = 'session=data';
                   window.location.href = '/savecookie?id=' + data;
                 });
               }
